@@ -12,13 +12,13 @@ Graph::Graph(int v, int e) {
 	this->edges = e;
 	for (int i = 0; i < verts; ++i) {
 		adjList.insert(adjList.begin() + i, { -1 });
-		dist.insert(dist.begin() + i, -1);
+		dist.insert(dist.begin() + i, { -1 });
 	}
 }
 
 void Graph::addEgde(int from, int to, int d) {
 	adjList.at(from).push_back(to);
-	dist.at(to) = d;
+	dist.at(from).push_back(d);
 }
 
 void Graph::shortestPath(int source, int dest) {
@@ -39,17 +39,15 @@ void Graph::shortestPath(int source, int dest) {
 			int neighbor = adjList[node].at(i);
 			if (neighbor >= 0) {
 				if (!marked[neighbor]) {
-					int new_dist = cost.at(node) + dist.at(neighbor);
+					int new_dist = cost.at(node) + dist.at(node).at(i);
 					if (new_dist < cost.at(neighbor)) {
-						cost.insert(cost.begin() + neighbor, new_dist);
+						cost.at(neighbor) = new_dist;
+						pq.push(neighbor);
 					}
-					pq.push(neighbor);
 				}
-				else if (marked[neighbor] && neighbor == dest) {
-					break;
-				}
+				else if (marked[neighbor] && neighbor == dest) break;
 			}
-		}
+ 		}
 	}
 	cout << "Shortest Path From " << source << " to " << dest << ": " << cost.at(dest) << endl;
 }
@@ -82,7 +80,7 @@ void Graph::bfs(int s) {
 void Graph::dfs(int s) {
 	stack<int> st;
 	vector<bool> marked;
-	for (int i = 0; i < verts; ++i) {
+	for (int i = 0; i < verts + 1; ++i) {
 		marked.insert(marked.begin() + i, false);
 	}
 	st.push(s);
@@ -109,7 +107,7 @@ void Graph::printGraph() {
 		cout << i << " -> ";
 		for (int j = 0; j < adjList.at(i).size(); ++j) {
 			if (adjList[i].at(j) >= 0 )
-				cout << adjList[i].at(j) << " ";
+				cout << "\t" << adjList[i].at(j) << " " << " weight: " << dist[i].at(j) << endl;
 		}
 		cout << "" << endl;
 	}
@@ -119,13 +117,15 @@ void Graph::testGraph() {
 	this->addEgde(0, 1, 3);
 	this->addEgde(4, 3, 5);
 	this->addEgde(0, 2, 10);
-	this->addEgde(0, 3, 11);
-	this->addEgde(2, 3, 8);
-	this->addEgde(1, 2, 5);
+	this->addEgde(0, 3, 20);
+	this->addEgde(2, 3, 3);
+	this->addEgde(1, 2, 6);
 	this->addEgde(3, 1, 4);
 	this->bfs(0);
 	cout << "" << endl;
 	this->dfs(0);
+	cout << "" << endl;
+	this->printGraph();
 	cout << "" << endl;
 	this->shortestPath(0, 3);
 }

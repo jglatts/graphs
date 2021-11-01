@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
-#include <map>
 
 class Graph
 {
@@ -21,7 +20,7 @@ private:
 	int verts;
 	int edges;
 	std::vector<std::vector<int>> adjList;
-	std::vector<int> dist;
+	std::vector<std::vector<int>> dist;
 };
 
 #endif // !GRAPH__H
