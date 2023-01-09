@@ -15,6 +15,8 @@ public class Dijkstra {
         // set distance to source = 0
         dist[s] = 0; 
         // loop until we've visited all neighboring vertices
+        // the below marked.size() condition only works for connected graph!
+        // only use a queue.isEmpty() condition to cover disconnected graphs
         while (marked.size() != adj.length-1) {
                 if (!queue.isEmpty()){
                     int v = queue.poll();
